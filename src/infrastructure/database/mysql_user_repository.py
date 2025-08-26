@@ -14,7 +14,7 @@ class MySQLUserRepository(IUserRepository):
             INSERT INTO {self.table_name} (name, email, password_hash, role)
             VALUES (%s, %s, %s, %s)
         """
-        params = (user.name, user.email, user.password_hash, user.role_value)
+        params = (user.name, user.email, user.password_hash, user.role.value)
 
         with db_handler.managed_cursor() as cursor:
             cursor.execute(query, params)
