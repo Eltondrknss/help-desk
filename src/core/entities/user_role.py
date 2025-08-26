@@ -4,6 +4,6 @@ class UserRole(Enum):
     "Define os cargos disponíveis para serem usados no sistema"
 
     ADMIN = "admin"
-    TECNICO = "tecnico"
-    USUARIO = "usuario"
+    TECHNICIAN = "tecnico"
+    USER = "usuario"
     
