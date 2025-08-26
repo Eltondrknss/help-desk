@@ -3,8 +3,8 @@ from typing import Optional
 from .user_role import UserRole
 
 @dataclass
-class USUARIO:
-    nome: str
+class User:
+    name: str
     email: str
     password_hash: str
     role: UserRole
