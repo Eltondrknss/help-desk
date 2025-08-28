@@ -1,6 +1,7 @@
 from src.core.use_cases.create_user import CreateUser
 from src.core.use_cases.list_users import ListUsers
 from src.core.use_cases.login_user import LoginUser, InvalidCredentialsError
+from src.core.entities.user import User
 from src.core.entities.user_role import UserRole
 
 class UserCLI:
@@ -45,16 +46,19 @@ class UserCLI:
             # Captura outros erros inesperados
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
 
-    def list_users_flow(self):
+    def list_users_flow(self, logged_in_user: User):
         print("\n--- Lista de usuários cadastrados ---")
         try:
-            users = self.list_users_case.execute()
+            users = self.list_users_case.execute(requester=logged_in_user)
             if not users:
                 print("Nenhum usu[ario encontrado.")
                 return
             
             for user in users:
                 print(f"ID: {user.id} | Nome: {user.name} | Email: {user.email} | Cargo: {user.role.value}")
+
+        except PermissionError as e:
+            print(f"\n❌ Acesso Negado: {e}")
 
         except Exception as e:
             print(f"\n❌ Ocorreu um erro ao listar os usuários: {e}")
@@ -69,7 +73,11 @@ class UserCLI:
             
             print(f"\n✅ Logado com sucesso! Bem vindo {logged_in_user.name}!")
 
+            return logged_in_user
+
         except InvalidCredentialsError as e:
             print(f"\n❌ Falha no login: {e}")
+            return None
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
+            return None
