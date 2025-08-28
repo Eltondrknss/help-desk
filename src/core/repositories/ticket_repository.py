@@ -21,3 +21,11 @@ class ITicketRepository(ABC):
     @abstractmethod
     def find_by_user_id(self, user_id: int) -> List[Ticket]:
         pass
+
+    @abstractmethod
+    def update(self, ticket: Ticket) -> Ticket:
+        pass
+
+    @abstractmethod
+    def find_by_status(self, status: TicketStatus) -> List[Ticket]:
+        pass

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from src.core.entities.ticket import Ticket
 from src.core.entities.ticket_status import TicketStatus
@@ -53,6 +54,40 @@ class MySQLTicketRepository(ITicketRepository):
         tickets: List[Ticket] = []
         with db_handler.managed_cursor() as cursor:
             cursor.execute(query, (user_id,))
+            rows = cursor.fetchall()
+
+        for row in rows:
+            tickets.append(self._row_to_entity(row))
+        return tickets
+    
+    def update(self, ticket: Ticket) -> Ticket:
+        ticket.updated_at = datetime.now()
+
+        query = f"""
+            UPDATE {self.table_name}
+            SET
+                title = %s,
+                description = %s,
+                status = %s,
+                user_id = %s,
+                technician_id = %s,
+                updated_at = %s
+            WHERE id = %s
+        """
+        params = (
+            ticket.title, ticket.description, ticket.status.value,
+            ticket.user_id, ticket.technician_id,
+            ticket.updated_at, ticket.id
+        )
+        with db_handler.managed_cursor() as cursor:
+            cursor.execute(query, params)
+            return ticket
+        
+    def find_by_status(self, status: TicketStatus) -> List[Ticket]:
+        query = f"SELECT * FROM {self.table_name} WHERE status = %s"
+        tickets: List[Ticket] = []
+        with db_handler.managed_cursor() as cursor:
+            cursor.execute(query, (status.value,))
             rows = cursor.fetchall()
 
         for row in rows:
