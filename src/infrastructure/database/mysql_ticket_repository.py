@@ -93,3 +93,14 @@ class MySQLTicketRepository(ITicketRepository):
         for row in rows:
             tickets.append(self._row_to_entity(row))
         return tickets
+    
+    def find_unclosed(self) -> List[Ticket]:
+        query = f"SELECT * FROM {self.table_name} WHERE status != %s"
+        tickets: List[Ticket] = []
+        with db_handler.managed_cursor() as cursor:
+            cursor.execute(query, (TicketStatus.CLOSED.value,))
+            rows = cursor.fetchall()
+
+        for row in rows:
+            tickets.append(self._row_to_entity(row))
+        return tickets

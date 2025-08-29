@@ -29,3 +29,7 @@ class ITicketRepository(ABC):
     @abstractmethod
     def find_by_status(self, status: TicketStatus) -> List[Ticket]:
         pass
+
+    @abstractmethod
+    def find_unclosed(self) -> List[Ticket]:
+        pass

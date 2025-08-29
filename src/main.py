@@ -10,6 +10,8 @@ from src.core.use_cases.list_users import ListUsers
 from src.core.use_cases.login_user import LoginUser
 from src.core.use_cases.create_ticket import CreateTicket
 from src.core.use_cases.list_user_tickets import ListUserTickets
+from src.core.use_cases.list_open_tickets import ListOpenTickets
+from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 
 #apresentacao
 from src.presentation.cli.user_cli import UserCLI
@@ -32,10 +34,21 @@ def main():
     login_user_case = LoginUser(user_repository=user_repository, password_hasher=password_hasher)
     create_ticket_case = CreateTicket(ticket_repository=ticket_repository)
     list_user_tickets_case = ListUserTickets(ticket_repository=ticket_repository)
+    list_open_tickets_case = ListOpenTickets(ticket_repository=ticket_repository)
+    update_ticket_status_case = UpdateTicketStatus(ticket_repository=ticket_repository)
 
     #CLI
-    user_cli = UserCLI(create_user_case=create_user_case, list_users_case=list_users_case, login_user_case=login_user_case)
-    ticket_cli = TicketCLI(create_ticket_case=create_ticket_case, list_user_tickets_case=list_user_tickets_case)
+    user_cli = UserCLI(
+        create_user_case=create_user_case,
+        list_users_case=list_users_case,
+        login_user_case=login_user_case
+        )
+    ticket_cli = TicketCLI(
+        create_ticket_case=create_ticket_case,
+        list_user_tickets_case=list_user_tickets_case,
+        list_open_tickets_case=list_open_tickets_case,
+        update_ticket_status_case=update_ticket_status_case
+        )
 
     #gerenciamento de sessao
     logged_in_user = None
@@ -47,8 +60,11 @@ def main():
             print("1. Abrir Novo Chamado")
             print("2. Meus Chamados")
 
+            if logged_in_user.role in [UserRole.TECHNICIAN, UserRole.ADMIN]:
+                print("3. Fila de chamados para atender")
+
             if logged_in_user.role == UserRole.ADMIN:
-                print("3. Listar todos os usuários")
+                print("4. Listar todos os usuários")
             
             print("0. Logout")
             choice = input("> ")
@@ -57,7 +73,9 @@ def main():
                 ticket_cli.create_ticket_flow(logged_in_user)
             elif choice == "2":
                 ticket_cli.list_my_tickets_flow(logged_in_user)
-            elif choice == "3" and logged_in_user.role == UserRole.ADMIN:
+            elif choice == "3":
+                ticket_cli.technician_update_flow(logged_in_user)
+            elif choice == "4" and logged_in_user.role == UserRole.ADMIN:
                 user_cli.list_users_flow(logged_in_user)
             elif choice == "0":
                 logged_in_user = None

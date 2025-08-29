@@ -1,12 +1,23 @@
 from src.core.entities.user import User
+from src.core.entities.ticket_status import TicketStatus
 from src.core.use_cases.create_ticket import CreateTicket
 from src.core.use_cases.list_user_tickets import ListUserTickets
+from src.core.use_cases.list_open_tickets import ListOpenTickets
+from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 
 class TicketCLI:
     
-    def __init__(self, create_ticket_case: CreateTicket, list_user_tickets_case: ListUserTickets):
+    def __init__(
+            self,
+            create_ticket_case: CreateTicket,
+            list_user_tickets_case: ListUserTickets,
+            list_open_tickets_case: ListOpenTickets,
+            update_ticket_status_case: UpdateTicketStatus
+    ):
         self.create_ticket_case = create_ticket_case
         self.list_user_tickets_case = list_user_tickets_case
+        self.list_open_tickets_case = list_open_tickets_case
+        self.update_ticket_status_case = update_ticket_status_case
 
     def create_ticket_flow(self, logged_in_user: User):
 
@@ -47,3 +58,46 @@ class TicketCLI:
 
         except Exception as e:
             print(f"\n❌ Ocorreu um erro ao buscar seus chamados: {e}")
+
+    def technician_update_flow(self, logged_in_user: User):
+        
+        print("\n--- Fila de chamados Abertos ---")
+        try:
+            open_tickets = self.list_open_tickets_case.execute(requester=logged_in_user)
+            if not open_tickets:
+                print("Não existem chamados abertos no momento.")
+                return
+            
+            for ticket in open_tickets:
+                print(f"  ID: {ticket.id} | Status: {ticket.status.value.upper()} | Título: {ticket.title}")
+
+            ticket_id_str = input("\nDigite o ID do chamado que quer atualizar (ou 'c' para cancelar):")
+            if ticket_id_str.lower() == 'c':
+                return
+            
+            ticket_id = int(ticket_id_str)
+
+            print("Escolha o novo status: 1- Em andamento, 2- Fechado")
+            status_choice = input("> ")
+            status_map = {
+                "1": TicketStatus.IN_PROGRESS,
+                "2": TicketStatus.CLOSED
+            }
+            new_status = status_map.get(status_choice)
+            if not new_status:
+                print("Opção inválida.")
+                return
+            
+            updated_ticket = self.update_ticket_status_case.execute(
+                requester=logged_in_user,
+                ticket_id=ticket_id,
+                new_status=new_status
+            )
+
+            print("\n✅ Chamado atualizado com sucesso!")
+            print(f"  ID: {updated_ticket.id} | Novo Status: {updated_ticket.status.value.upper()} | Técnico: {updated_ticket.technician_id}")
+
+        except (ValueError, PermissionError) as e:
+            print(f"\n❌ Erro: {e}")
+        except Exception as e:
+            print(f"\n❌ Ocorreu um erro inesperado: {e}")
