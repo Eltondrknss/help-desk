@@ -42,22 +42,24 @@ O princípio que conecta todas as camadas. Em vez de uma classe criar suas próp
 
 A organização dos arquivos reflete a arquitetura descrita acima:
 
+```bash
 src/
 ├── core/
-│    ├── entities/        # Classes de dados puras (User, Ticket)
-│    ├── repositories/    # Contratos dos repositórios (ITicketRepository)
-│    ├── security/        # Contrato do hasher de senha (IPasswordHasher)
-│    └── use_cases/       # Classes com a lógica de negócio (CreateUser)
+│		├── entities/		# Classes de dados puras (User, Ticket)
+│		├── repositories/	# Contratos dos repositórios (ITicketRepository)
+│		├── security/		# Contrato do hasher de senha (IPasswordHasher)
+│		└── use_cases/		# Classes com a lógica de negócio (CreateUser)
 │
 ├── infrastructure/
-│    ├── database/        # Implementação para MySQL dos repositórios
-│    └── security/        # Implementação com Bcrypt do hasher
+│		├── database/		# Implementação para MySQL dos repositórios
+│		└── security/		# Implementação com Bcrypt do hasher
 │
 ├── presentation/
-│    └── cli/             # Classes da interface de linha de comando
+│		└── cli/			# Classes da interface de linha de commando
 │
-├── config.py             # Classe para gerenciar configurações do .env
-└── main.py               # Ponto de entrada: monta e executa a aplicação`
+├── config.py				# Classe para gerenciar configurações do .env
+└── main.py			    	# Ponto de entrada: monta e executa a aplicação
+```
 
 ## 4. Funcionalidades Implementadas
 
