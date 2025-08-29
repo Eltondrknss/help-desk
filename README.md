@@ -1,7 +1,5 @@
 # **Documentação do Sistema de Chamados Técnicos**
 
-**Data:** 28 de Agosto de 2025
-
 ## 1. Visão Geral do Projeto
 
 Este projeto consiste em um sistema de chamados técnicos desenvolvido em Python. A aplicação é executada via terminal (CLI - Command-Line Interface) e permite a criação de usuários com diferentes níveis de permissão (Usuário, Técnico, Admin), a abertura de novos chamados, a atribuição e a atualização do status desses chamados.
