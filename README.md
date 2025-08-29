@@ -1,4 +1,4 @@
-# **Documentação do Sistema de Chamados Técnicos**
+# **Sistema Helpdesk**
 
 ## 1. Visão Geral do Projeto
 
