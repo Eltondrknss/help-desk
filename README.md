@@ -127,7 +127,7 @@ Para executar o projeto, siga os passos abaixo:
         			name VARCHAR(255) NOT NULL,
         			email VARCHAR(255) NOT NULL UNIQUE,
         			password_hash VARCHAR(255) NOT NULL,
-        			role ENUM('admin', 'technician', 'user') NOT NULL
+        			role ENUM('admin', 'tecnico', 'usuario') NOT NULL
         );
         
         -- Tabela de Chamados
@@ -135,7 +135,7 @@ Para executar o projeto, siga os passos abaixo:
         			id INT AUTO_INCREMENT PRIMARY KEY,
         			title VARCHAR(255) NOT NULL,
         			description TEXT,
-        			status ENUM('open', 'in_progress', 'closed') NOT NULL DEFAULT 'open',
+        			status ENUM('aberto', 'em_atendimento', 'fechado') NOT NULL DEFAULT 'open',
         			user_id INT NOT NULL,
         			technician_id INT,
         			created_at DATETIME NOT NULL,
