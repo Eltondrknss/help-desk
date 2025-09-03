@@ -4,6 +4,7 @@ from src.core.use_cases.create_ticket import CreateTicket
 from src.core.use_cases.list_user_tickets import ListUserTickets
 from src.core.use_cases.list_open_tickets import ListOpenTickets
 from src.core.use_cases.update_ticket_status import UpdateTicketStatus
+from src.presentation.cli.cli_utils import non_empty_input
 
 class TicketCLI:
     
@@ -27,8 +28,8 @@ class TicketCLI:
         
         print("\n--- Abertura de Novo Chamado ---")
         try:
-            title = input("Titulo: ")
-            description = input("Descrição detalhada do problema: ")
+            title = non_empty_input("Titulo: ")
+            description = non_empty_input("Descrição detalhada do problema: ")
             created_ticket = self.create_ticket_case.execute(title=title, description=description, user_id= logged_in_user.id)
 
             print("\n✅ Chamado criado com sucesso!")
@@ -71,14 +72,14 @@ class TicketCLI:
             for ticket in open_tickets:
                 print(f"  ID: {ticket.id} | Status: {ticket.status.value.upper()} | Título: {ticket.title}")
 
-            ticket_id_str = input("\nDigite o ID do chamado que quer atualizar (ou 'c' para cancelar):")
+            ticket_id_str = non_empty_input("\nDigite o ID do chamado que quer atualizar (ou 'c' para cancelar):")
             if ticket_id_str.lower() == 'c':
                 return
             
             ticket_id = int(ticket_id_str)
 
             print("Escolha o novo status: 1- Em andamento, 2- Fechado")
-            status_choice = input("> ")
+            status_choice = non_empty_input("> ")
             status_map = {
                 "1": TicketStatus.IN_PROGRESS,
                 "2": TicketStatus.CLOSED

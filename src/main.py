@@ -16,6 +16,7 @@ from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 #apresentacao
 from src.presentation.cli.user_cli import UserCLI
 from src.presentation.cli.ticket_cli import TicketCLI
+from src.presentation.cli.cli_utils import non_empty_input
 
 def main():
 
@@ -67,7 +68,7 @@ def main():
                 print("4. Listar todos os usuários")
             
             print("0. Logout")
-            choice = input("> ")
+            choice = non_empty_input("> ")
 
             if choice == "1":
                 ticket_cli.create_ticket_flow(logged_in_user)
@@ -89,7 +90,7 @@ def main():
             print("1. Login")
             print("2. Criar Novo Usuário")
             print("0. Sair")
-            choice = input("> ")
+            choice = non_empty_input("> ")
 
             if choice == "1":
                 logged_in_user = user_cli.login_flow()

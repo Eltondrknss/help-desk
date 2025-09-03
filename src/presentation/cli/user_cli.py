@@ -3,6 +3,8 @@ from src.core.use_cases.list_users import ListUsers
 from src.core.use_cases.login_user import LoginUser, InvalidCredentialsError
 from src.core.entities.user import User
 from src.core.entities.user_role import UserRole
+from src.presentation.cli.cli_utils import non_empty_input
+
 
 class UserCLI:
     
@@ -17,12 +19,12 @@ class UserCLI:
         print("\n--- Cadastro de Novo Usuário ---")
 
         try:
-            name = input("Nome: ")
-            email = input("E-mail: ")
-            password = input("Senha: ")
+            name = non_empty_input("Nome: ")
+            email = non_empty_input("E-mail: ")
+            password = non_empty_input("Senha: ")
 
             print("Escolha o cargo: 1-Admin, 2-Tecnico, 3-Usuario")
-            role_choice = input("> ")
+            role_choice = non_empty_input("> ")
             role_map = {
                 "1": UserRole.ADMIN,
                 "2": UserRole.TECHNICIAN,
@@ -66,8 +68,8 @@ class UserCLI:
     def login_flow(self):
         print("\n--- Login ---")
         try:
-            email = input("Email: ")
-            password = input("Senha: ")
+            email = non_empty_input("Email: ")
+            password = non_empty_input("Senha: ")
 
             logged_in_user = self.login_user_case.execute(email = email, password = password)
             
