@@ -4,6 +4,7 @@ from src.core.use_cases.login_user import LoginUser, InvalidCredentialsError
 from src.core.entities.user import User
 from src.core.entities.user_role import UserRole
 from src.presentation.cli.cli_utils import non_empty_input
+from src.core.exceptions import ValidationError, ResourceNotFoundError, AuthenticationError, PermissionDeniedError
 
 
 class UserCLI:
@@ -41,9 +42,9 @@ class UserCLI:
             print("\n✅ Usuário criado com sucesso!")
             print(f"ID: {created_user.id}, Nome: {created_user.name}. Email: {created_user.email}, Cargo: {created_user.role.value}")
 
-        except ValueError as e:
+        except ValidationError as e:
             # Captura erros de negócio (ex: email duplicado) e mostra ao usuário
-            print(f"\n❌ Erro ao criar usuário: {e}")
+            print(f"\n❌ Erro de validação: {e}")
         except Exception as e:
             # Captura outros erros inesperados
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
@@ -59,7 +60,7 @@ class UserCLI:
             for user in users:
                 print(f"ID: {user.id} | Nome: {user.name} | Email: {user.email} | Cargo: {user.role.value}")
 
-        except PermissionError as e:
+        except PermissionDeniedError as e:
             print(f"\n❌ Acesso Negado: {e}")
 
         except Exception as e:
@@ -77,8 +78,8 @@ class UserCLI:
 
             return logged_in_user
 
-        except InvalidCredentialsError as e:
-            print(f"\n❌ Falha no login: {e}")
+        except (ResourceNotFoundError, AuthenticationError) as e:
+            print(f"\n❌ Falha no login: email ou senha inválidos")
             return None
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")

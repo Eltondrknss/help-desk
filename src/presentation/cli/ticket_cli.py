@@ -5,6 +5,7 @@ from src.core.use_cases.list_user_tickets import ListUserTickets
 from src.core.use_cases.list_open_tickets import ListOpenTickets
 from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 from src.presentation.cli.cli_utils import non_empty_input
+from src.core.exceptions import ValidationError, PermissionDeniedError
 
 class TicketCLI:
     
@@ -35,7 +36,7 @@ class TicketCLI:
             print("\n✅ Chamado criado com sucesso!")
             print(f"ID: {created_ticket.id}, Titulo: {created_ticket.title}, Status: {created_ticket.status.value}")
 
-        except ValueError as e:
+        except ValidationError as e:
             print(f"\n❌ Erro ao criar chamado: {e}")
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
@@ -57,7 +58,7 @@ class TicketCLI:
                 print(f"  ID: {ticket.id} | Status: {ticket.status.value.upper()} | Título: {ticket.title}")
                 print(f"    Criado em: {ticket.created_at.strftime('%d/%m/%Y %H:%M')}")
 
-        except Exception as e:
+        except ValidationError as e:
             print(f"\n❌ Ocorreu um erro ao buscar seus chamados: {e}")
 
     def technician_update_flow(self, logged_in_user: User):
@@ -98,7 +99,7 @@ class TicketCLI:
             print("\n✅ Chamado atualizado com sucesso!")
             print(f"  ID: {updated_ticket.id} | Novo Status: {updated_ticket.status.value.upper()} | Técnico: {updated_ticket.technician_id}")
 
-        except (ValueError, PermissionError) as e:
+        except (ValidationError, PermissionDeniedError) as e:
             print(f"\n❌ Erro: {e}")
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
