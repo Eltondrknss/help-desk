@@ -2,6 +2,7 @@ from typing import List
 from src.core.entities.user import User
 from src.core.entities.user_role import UserRole
 from src.core.repositories.user_repository import IUserRepository
+from src.core.exceptions import PermissionDeniedError
 
 class ListUsers:
 
@@ -10,7 +11,7 @@ class ListUsers:
 
     def execute(self, requester: User) -> List[User]:
         if requester.role != UserRole.ADMIN:
-            raise PermissionError("Apenas administradores podem listar todos os usuários")
+            raise PermissionDeniedError("Apenas administradores podem listar todos os usuários")
         
         users = self.user_repository.find_all()
         return users

@@ -1,6 +1,7 @@
 from src.core.entities.ticket import Ticket
 from src.core.entities.ticket_status import TicketStatus
 from src.core.repositories.ticket_repository import ITicketRepository
+from src.core.exceptions import ValidationError
 
 class CreateTicket:
 
@@ -10,7 +11,7 @@ class CreateTicket:
     def execute(self, title: str, description: str, user_id: int) -> Ticket:
         
         if not title:
-            raise ValueError("O titulo do chamado não pode ser vazio.")
+            raise ValidationError("O titulo do chamado não pode ser vazio.")
         
         new_ticket = Ticket(
             title=title,

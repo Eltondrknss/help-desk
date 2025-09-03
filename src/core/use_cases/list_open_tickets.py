@@ -3,6 +3,7 @@ from src.core.entities.user import User
 from src.core.entities.ticket import Ticket
 from src.core.entities.user_role import UserRole
 from src.core.repositories.ticket_repository import ITicketRepository
+from src.core.exceptions import PermissionDeniedError
 
 class ListOpenTickets:
 
@@ -11,7 +12,7 @@ class ListOpenTickets:
 
     def execute(self, requester: User) -> List[Ticket]:
         if requester.role not in [UserRole.TECHNICIAN, UserRole.ADMIN]:
-            raise PermissionError("Apenas técnicos e administradores podem listar todos os chamados abertos.")
+            raise PermissionDeniedError("Apenas técnicos e administradores podem listar todos os chamados abertos.")
         
         open_tickets = self.ticket_repository.find_unclosed()
         return open_tickets

@@ -1,6 +1,7 @@
 from src.core.entities.user import User
 from src.core.repositories.user_repository import IUserRepository
 from src.core.security.password_hasher import IPasswordHasher
+from src.core.exceptions import AuthenticationError
 
 class InvalidCredentialsError(Exception):
     pass
@@ -15,11 +16,11 @@ class LoginUser:
 
         user = self.user_repository.find_by_email(email)
         if not user:
-            raise InvalidCredentialsError("Email ou senha inválidos.")
+            raise AuthenticationError("Email ou senha inválidos.")
         
         is_password_valid = self.password_hasher.verify(plain_password = password, hashed_password = user.password_hash)
 
         if not is_password_valid:
-            raise InvalidCredentialsError("Email ou senha inválidos.")
+            raise AuthenticationError("Email ou senha inválidos.")
         
         return user
