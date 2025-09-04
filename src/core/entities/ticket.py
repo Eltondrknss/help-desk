@@ -5,8 +5,8 @@ from .ticket_status import TicketStatus
 
 class Ticket(BaseModel):
     
-    title: constr(strip_whitespace=True, min_length=5)
-    description: constr(strip_whitespace=True, min_length=1)
+    title: constr(strip_whitespace=True, min_length=10)
+    description: constr(strip_whitespace=True, min_length=10)
     status: TicketStatus
     user_id: int
 

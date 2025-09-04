@@ -4,7 +4,8 @@ from src.core.use_cases.login_user import LoginUser, InvalidCredentialsError
 from src.core.entities.user import User
 from src.core.entities.user_role import UserRole
 from src.presentation.cli.cli_utils import non_empty_input
-from src.core.exceptions import ValidationError, ResourceNotFoundError, AuthenticationError, PermissionDeniedError
+from src.core.exceptions import ApplicationError, ResourceNotFoundError, AuthenticationError, PermissionDeniedError
+from pydantic import ValidationError
 
 
 class UserCLI:
@@ -44,7 +45,14 @@ class UserCLI:
 
         except ValidationError as e:
             # Captura erros de negócio (ex: email duplicado) e mostra ao usuário
-            print(f"\n❌ Erro de validação: {e}")
+            print(f"\n❌ Erro de validação. Por favor corrija os seguinte campos:")
+            for error in e.errors():
+                campo = error['loc'][0]
+                mensagem = error['msg']
+                print(f" - Campo '{campo}': {mensagem}")
+        
+        except ApplicationError as e:
+            print(f"\n❌ Erro: {e}")
         except Exception as e:
             # Captura outros erros inesperados
             print(f"\n❌ Ocorreu um erro inesperado: {e}")

@@ -5,7 +5,8 @@ from src.core.use_cases.list_user_tickets import ListUserTickets
 from src.core.use_cases.list_open_tickets import ListOpenTickets
 from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 from src.presentation.cli.cli_utils import non_empty_input
-from src.core.exceptions import ValidationError, PermissionDeniedError
+from src.core.exceptions import PermissionDeniedError, ApplicationError
+from pydantic import ValidationError
 
 class TicketCLI:
     
@@ -37,7 +38,14 @@ class TicketCLI:
             print(f"ID: {created_ticket.id}, Titulo: {created_ticket.title}, Status: {created_ticket.status.value}")
 
         except ValidationError as e:
-            print(f"\n❌ Erro ao criar chamado: {e}")
+            print(f"\n❌ Erro de validação. Por favor corrija os seguinte campos:")
+            for error in e.errors():
+                campo = error['loc'][0]
+                mensagem = error['msg']
+                print(f" - Campo '{campo}': {mensagem}")
+
+        except ApplicationError as e:
+            print(f"\n❌ Erro: {e}")
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
 
