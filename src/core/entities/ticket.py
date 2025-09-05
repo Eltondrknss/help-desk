@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, Field, StringConstraints
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Annotated
 from .ticket_status import TicketStatus
 
 class Ticket(BaseModel):
     
-    title: constr(strip_whitespace=True, min_length=10)
-    description: constr(strip_whitespace=True, min_length=10)
+    title: Annotated[str, StringConstraints(strip_whitespace=True, min_length=10)]
+    description: Annotated[str, StringConstraints(strip_whitespace=True, min_length=10)]
     status: TicketStatus
     user_id: int
 

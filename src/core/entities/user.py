@@ -1,10 +1,10 @@
-from pydantic import BaseModel, EmailStr, constr
-from typing import Optional
+from pydantic import BaseModel, EmailStr, StringConstraints
+from typing import Optional, Annotated
 from .user_role import UserRole
 
 class User(BaseModel):
 
-    name: constr(strip_whitespace=True, min_length=4)
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=4)]
     email: EmailStr
     password_hash: str
     role: UserRole
