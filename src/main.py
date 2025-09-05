@@ -1,3 +1,6 @@
+import logging
+from src.logger_config import setup_logger
+
 #infraestrutura
 from src.infrastructure.database.mysql_user_repository import MySQLUserRepository
 from src.infrastructure.database.mysql_ticket_repository import MySQLTicketRepository
@@ -20,7 +23,9 @@ from src.presentation.cli.cli_utils import non_empty_input
 
 def main():
 
-    print("Iniciando o Sistema de Chamados...")
+    setup_logger()
+
+    logging.info("Iniciando o Sistema de Chamados...")
 
     #container de injecao de dependencia
 
