@@ -26,6 +26,7 @@ def main():
     setup_logger()
 
     logging.info("Iniciando o Sistema de Chamados...")
+    print("Iniciando o Sistema de Chamados...")
 
     #container de injecao de dependencia
 

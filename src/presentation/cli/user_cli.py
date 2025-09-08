@@ -1,3 +1,4 @@
+import logging
 from src.core.use_cases.create_user import CreateUser
 from src.core.use_cases.list_users import ListUsers
 from src.core.use_cases.login_user import LoginUser, InvalidCredentialsError
@@ -6,6 +7,8 @@ from src.core.entities.user_role import UserRole
 from src.presentation.cli.cli_utils import non_empty_input
 from src.core.exceptions import ApplicationError, ResourceNotFoundError, AuthenticationError, PermissionDeniedError
 from pydantic import ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 class UserCLI:
@@ -82,13 +85,16 @@ class UserCLI:
 
             logged_in_user = self.login_user_case.execute(email = email, password = password)
             
+            logger.info(f"Login bem-sucedido para o usuário '{logged_in_user.name}' (ID: {logged_in_user.id}).")
             print(f"\n✅ Logado com sucesso! Bem vindo {logged_in_user.name}!")
 
             return logged_in_user
 
         except (ResourceNotFoundError, AuthenticationError) as e:
+            logger.error(f"Falha na tentativa de login para o email '{email}': {e}")
             print(f"\n❌ Falha no login: email ou senha inválidos")
             return None
         except Exception as e:
+            logger.exception("Ocorreu um erro inesperado durante o fluxo de login.")
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
             return None
