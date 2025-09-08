@@ -1,3 +1,4 @@
+import logging
 from src.core.entities.user import User
 from src.core.entities.ticket_status import TicketStatus
 from src.core.use_cases.create_ticket import CreateTicket
@@ -7,6 +8,8 @@ from src.core.use_cases.update_ticket_status import UpdateTicketStatus
 from src.presentation.cli.cli_utils import non_empty_input
 from src.core.exceptions import PermissionDeniedError, ApplicationError
 from pydantic import ValidationError
+
+logger = logging.getLogger(__name__)
 
 class TicketCLI:
     
@@ -26,19 +29,23 @@ class TicketCLI:
 
         if not logged_in_user:
             print("\n❌ Você precisa estar logado para criar um chamado.")
+            logger.warning(f"Tentativa de criar um chamado sem estar logado.")
             return
         
         print("\n--- Abertura de Novo Chamado ---")
+        logger.info(f"Usuário: {logged_in_user.name} iniciou a abertura de um chamado.")
         try:
             title = non_empty_input("Titulo: ")
             description = non_empty_input("Descrição detalhada do problema: ")
             created_ticket = self.create_ticket_case.execute(title=title, description=description, user_id= logged_in_user.id)
 
             print("\n✅ Chamado criado com sucesso!")
+            logger.info(f"Usuário {logged_in_user.name} abriu o chamado: ID:{created_ticket.id} - {created_ticket.title}.")
             print(f"ID: {created_ticket.id}, Titulo: {created_ticket.title}, Status: {created_ticket.status.value}")
 
         except ValidationError as e:
             print(f"\n❌ Erro de validação. Por favor corrija os seguinte campos:")
+            logger.error(f"Usuário: {logged_in_user.name} inseriu dados inválidos na abertura do chamado")
             for error in e.errors():
                 campo = error['loc'][0]
                 mensagem = error['msg']
@@ -46,8 +53,10 @@ class TicketCLI:
 
         except ApplicationError as e:
             print(f"\n❌ Erro: {e}")
+            logger.error(f"Ocorreu um erro: {e}")
         except Exception as e:
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
+            logger.exception(f"\n❌ Ocorreu um erro inesperado: {e}")
 
     def list_my_tickets_flow(self, logged_in_user: User):
         if not logged_in_user:
