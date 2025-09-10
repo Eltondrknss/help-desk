@@ -1,15 +1,16 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
+            "name": "Python: Módulo Atual",
+            "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
+            "module": "src.main", // Diz para executar como "python -m src.main"
+            "console": "integratedTerminal",
+            "env": {
+                // É AQUI QUE A MÁGICA ACONTECE
+                "DOTENV_KEY": "tjxnFlLEJlxsGqcf8pLEFz84OY7bvcg20e9U8neJg8A="
+            }
         }
     ]
 }

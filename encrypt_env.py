@@ -16,7 +16,7 @@ with open('.env', 'rb') as file:
 
 encrypted_content = fernet.encrypt(original_content)
 
-with open ('/env.encrypted', 'wb') as encrypted_file:
+with open ('.env.encrypted', 'wb') as encrypted_file:
     encrypted_file.write(encrypted_content)
 
 
