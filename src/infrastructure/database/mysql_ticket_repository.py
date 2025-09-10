@@ -71,13 +71,15 @@ class MySQLTicketRepository(ITicketRepository):
                 status = %s,
                 user_id = %s,
                 technician_id = %s,
-                updated_at = %s
+                updated_at = %s,
+                closing_justification = %s
             WHERE id = %s
         """
         params = (
             ticket.title, ticket.description, ticket.status.value,
             ticket.user_id, ticket.technician_id,
-            ticket.updated_at, ticket.id
+            ticket.updated_at,
+            ticket.closing_justification, ticket.id
         )
         with db_handler.managed_cursor() as cursor:
             cursor.execute(query, params)

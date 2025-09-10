@@ -13,6 +13,8 @@ class Ticket(BaseModel):
     id: Optional[int] = None
     technician_id: Optional[int] = None
 
+    closing_justification: Optional[str] = None
+
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 

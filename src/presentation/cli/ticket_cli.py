@@ -108,15 +108,23 @@ class TicketCLI:
                 print("Opção inválida.")
                 return
             
+            justification = None
+            if new_status == TicketStatus.CLOSED:
+                justification = non_empty_input("Digite a resolução do chamado: ")
+            
             updated_ticket = self.update_ticket_status_case.execute(
                 requester=logged_in_user,
                 ticket_id=ticket_id,
-                new_status=new_status
+                new_status=new_status,
+                justification=justification
             )
 
-            logger.info(f"{logged_in_user.name} atualizou o status do chamado ID{updated_ticket.id} atualizado para {updated_ticket.status.value}")
+            #logger.info(f"{logged_in_user.name} atualizou o status do chamado ID{updated_ticket.id} atualizado para {updated_ticket.status.value}")
             print("\n✅ Chamado atualizado com sucesso!")
             print(f"  ID: {updated_ticket.id} | Novo Status: {updated_ticket.status.value.upper()} | Técnico: {updated_ticket.technician_id}")
+            if updated_ticket.closing_justification:
+                #logger.info(f"O chamado {updated_ticket.id} foi fechado com a justificativa: {updated_ticket.closing_justification}")
+                print(f"Justificativa: {updated_ticket.closing_justification}")
 
         except (ValidationError, PermissionDeniedError) as e:
             logger.error(f"Erro: {e}")
