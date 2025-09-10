@@ -76,6 +76,7 @@ class TicketCLI:
                 print(f"    Criado em: {ticket.created_at.strftime('%d/%m/%Y %H:%M')}")
 
         except ValidationError as e:
+            logger.warning("Erro ao buscar os chamados do usuário")
             print(f"\n❌ Ocorreu um erro ao buscar seus chamados: {e}")
 
     def technician_update_flow(self, logged_in_user: User):
@@ -113,10 +114,13 @@ class TicketCLI:
                 new_status=new_status
             )
 
+            logger.info(f"{logged_in_user.name} atualizou o status do chamado ID{updated_ticket.id} atualizado para {updated_ticket.status.value}")
             print("\n✅ Chamado atualizado com sucesso!")
             print(f"  ID: {updated_ticket.id} | Novo Status: {updated_ticket.status.value.upper()} | Técnico: {updated_ticket.technician_id}")
 
         except (ValidationError, PermissionDeniedError) as e:
+            logger.error(f"Erro: {e}")
             print(f"\n❌ Erro: {e}")
         except Exception as e:
+            logger.exception(f"Ocorreu um erro inesperado: {e}")
             print(f"\n❌ Ocorreu um erro inesperado: {e}")
