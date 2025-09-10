@@ -5,7 +5,7 @@ from logging.handlers import RotatingFileHandler
 
 def setup_logger():
     log_formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s] [%(name)s] %(message)s (%(filename)s:%(lineno)d)"
+        "%(asctime)s [%(levelname)s] %(message)s (%(filename)s:%(lineno)d)"
     )
 
     root_logger = logging.getLogger()
@@ -27,10 +27,12 @@ def setup_logger():
     error_log_handler.setFormatter(log_formatter)
     error_log_handler.setLevel(logging.ERROR)
 
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(log_formatter)
-    console_handler.setLevel(logging.INFO)
 
+    #descomentar caso queira que as mensagens que vao pro arquivo de log aparecam no terminal.
+    # console_handler = logging.StreamHandler(sys.stdout)
+    # console_handler.setFormatter(log_formatter)
+    # console_handler.setLevel(logging.INFO)
+
+    #root_logger.addHandler(console_handler)
     root_logger.addHandler(app_log_handler)
     root_logger.addHandler(error_log_handler)
-    root_logger.addHandler(console_handler)
